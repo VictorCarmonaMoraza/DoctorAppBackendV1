@@ -1,6 +1,7 @@
 ﻿using Data.DBContext;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Models.Entities;
 
 namespace API.Controllers
@@ -21,9 +22,9 @@ namespace API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]  //api/usuario
-        public ActionResult<IEnumerable<Usuario>> GetUsuarios()
+        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
         {
-            var usuarios = _context.Users.ToList();
+            var usuarios =await  _context.Users.ToListAsync();
             return Ok(usuarios);
         }
 
@@ -33,9 +34,9 @@ namespace API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")] //api/usuario
-        public ActionResult<Usuario> GetUsuario(int id)
+        public async  Task<ActionResult<Usuario>> GetUsuario(int id)
         {
-            var usuario = _context.Users.FirstOrDefault(x => x.Id == id);
+            var usuario = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
             if (usuario == null)
             {
                 return NotFound();
