@@ -1,5 +1,6 @@
 ﻿using Data.DBContext;
 using Data.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.DTOs;
@@ -25,6 +26,7 @@ namespace API.Controllers
         /// Obtiene toda la lista de usuarios
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [HttpGet]  //api/usuario
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
         {
@@ -37,6 +39,7 @@ namespace API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet("{id}")] //api/usuario
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
