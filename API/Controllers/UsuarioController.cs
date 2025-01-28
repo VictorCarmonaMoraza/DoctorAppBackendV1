@@ -1,4 +1,5 @@
 ﻿using Data.DBContext;
+using Data.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.DTOs;
@@ -12,10 +13,12 @@ namespace API.Controllers
     public class UsuarioController : BaseApiController
     {
         private readonly ApplicationDbContext _context;
+        private readonly ITokenServicio _tokenServicio;
 
-        public UsuarioController(ApplicationDbContext context)
+        public UsuarioController(ApplicationDbContext context, ITokenServicio tokenServicio)
         {
-            _context = context;
+            _context = context;            _tokenServicio = tokenServicio;
+
         }
 
         /// <summary>
@@ -52,7 +55,7 @@ namespace API.Controllers
         /// <param name="registroDto"></param>
         /// <returns></returns>
         [HttpPost("registro")]
-        public async Task<ActionResult<Usuario>> Registro(RegistroDto registroDto)
+        public async Task<ActionResult<UsuarioDto>> Registro(RegistroDto registroDto)
         {
             if (await UsuarioExiste(registroDto.Username)) return BadRequest("El usuario ya esta registrado en la base de datos");
 
@@ -65,11 +68,20 @@ namespace API.Controllers
             };
             _context.Users.Add(usuario);
             await _context.SaveChangesAsync();
-            return usuario;
+            return new UsuarioDto
+            {
+                Username = usuario.Username,
+                Token = _tokenServicio.CreatrToken(usuario)
+            };
         }
 
+        /// <summary>
+        /// Login de Usuario
+        /// </summary>
+        /// <param name="loginDto"></param>
+        /// <returns></returns>
         [HttpPost("login")]  //POST: api/usuario/login
-        public async Task<ActionResult<Usuario>> Login(LoginDto loginDto)
+        public async Task<ActionResult<UsuarioDto>> Login(LoginDto loginDto)
         {
             var usuario = await _context.Users.SingleOrDefaultAsync(x => x.Username == loginDto.Username);
             //Si el usuario no esta en la base de datos retornamos un mensaje de error
@@ -84,7 +96,11 @@ namespace API.Controllers
                 if (computedHash[i] != usuario.PasswordHash[i]) return Unauthorized("Contraseña incorrecta");
             }
 
-            return usuario;
+            return new UsuarioDto
+            {
+                Username = usuario.Username,
+                Token = _tokenServicio.CreatrToken(usuario)
+            };
         }
 
         /// <summary>
