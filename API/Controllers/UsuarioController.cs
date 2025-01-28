@@ -68,6 +68,25 @@ namespace API.Controllers
             return usuario;
         }
 
+        [HttpPost("login")]  //POST: api/usuario/login
+        public async Task<ActionResult<Usuario>> Login(LoginDto loginDto)
+        {
+            var usuario = await _context.Users.SingleOrDefaultAsync(x => x.Username == loginDto.Username);
+            //Si el usuario no esta en la base de datos retornamos un mensaje de error
+            if (usuario == null) return Unauthorized("Usuario no valido");
+
+            using var hmac = new HMACSHA512(usuario.PasswordSalt);
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
+
+            //Comparamos caracterer por caracter el hash de la contraseña
+            for (int i = 0; i < computedHash.Length; i++)
+            {
+                if (computedHash[i] != usuario.PasswordHash[i]) return Unauthorized("Contraseña incorrecta");
+            }
+
+            return usuario;
+        }
+
         /// <summary>
         /// Valida si un usuario existe en la base de datos
         /// </summary>
