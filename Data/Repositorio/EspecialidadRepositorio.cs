@@ -25,6 +25,7 @@ namespace Data.Repositorio
                 especialidadDb.NombreEspecialidad = especialidad.NombreEspecialidad;
                 especialidadDb.Descripcion = especialidad.Descripcion;
                 especialidadDb.Estado = especialidad.Estado;
+                especialidadDb.FechaActualizacion = DateTime.Now;
                 _contexto.SaveChanges();
             }
         }
