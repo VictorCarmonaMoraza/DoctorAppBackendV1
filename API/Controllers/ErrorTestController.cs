@@ -1,4 +1,5 @@
-﻿using Data.DBContext;
+﻿using API.Errores;
+using Data.DBContext;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Entities;
@@ -33,7 +34,7 @@ namespace API.Controllers
         public ActionResult<Usuario> GetNotFound()
         {
             var objeto = _context.Users.Find(-1);
-            if (objeto == null) return NotFound();
+            if (objeto == null) return NotFound(new ApiErrorResponse(404));
             return Ok(objeto);
         }
 
@@ -57,7 +58,7 @@ namespace API.Controllers
         [HttpGet("bad-request")]
         public ActionResult<string> GetBadRequest()
         {
-          return BadRequest("La solictud no es valida - Bad Request");
+          return BadRequest(new ApiErrorResponse(400));
         }
     }
 }
