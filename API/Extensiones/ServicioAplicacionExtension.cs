@@ -1,4 +1,6 @@
 ﻿using API.Errores;
+using BLL.Serivicios.Interfaces;
+using BLL.Servicios;
 using Data.DBContext;
 using Data.Interfaces;
 using Data.Interfaces.IRepositorio;
@@ -72,6 +74,8 @@ namespace API.Extensiones
             });
             services.AddScoped<IUnidadTrabajo, UnidadTrabajo>();
             services.AddAutoMapper(typeof(MappingProfile));
+
+            services.AddScoped<IEspecialidadServicio,EspecialidadServicio>();
 
             return services;
         }
