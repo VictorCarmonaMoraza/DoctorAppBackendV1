@@ -6,7 +6,9 @@ using Data.Repositorio;
 using Data.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 using Microsoft.OpenApi.Models;
+using Utilidades;
 
 namespace API.Extensiones
 {
@@ -69,6 +71,7 @@ namespace API.Extensiones
                 };
             });
             services.AddScoped<IUnidadTrabajo, UnidadTrabajo>();
+            services.AddAutoMapper(typeof(MappingProfile));
 
             return services;
         }
