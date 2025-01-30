@@ -18,7 +18,8 @@ namespace API.Controllers
 
         public UsuarioController(ApplicationDbContext context, ITokenServicio tokenServicio)
         {
-            _context = context;            _tokenServicio = tokenServicio;
+            _context = context;
+            _tokenServicio = tokenServicio;
 
         }
 
